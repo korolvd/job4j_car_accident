@@ -25,12 +25,18 @@
         <table class="table">
             <thead>
             <tr>
-                <th scope="col">String</th>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Text</th>
+                <th scope="col">Address</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="element: ${list}">
-                <td th:text="${element}"></td>
+            <tr th:each="accident: ${accidents}">
+                <td th:text="${accident.id}"></td>
+                <td th:text="${accident.name}"></td>
+                <td th:text="${accident.text}"></td>
+                <td th:text="${accident.address}"></td>
             </tr>
             </tbody>
         </table>
