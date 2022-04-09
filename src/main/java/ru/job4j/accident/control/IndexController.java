@@ -7,7 +7,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.job4j.accident.model.Accident;
+import ru.job4j.accident.model.AccidentType;
 import ru.job4j.accident.service.AccidentService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class IndexController {
@@ -26,6 +30,11 @@ public class IndexController {
 
     @GetMapping("/addForm")
     public String addAccident(Model model) {
+        List<AccidentType> types = new ArrayList<>();
+        types.add(AccidentType.of(1, "Две машины"));
+        types.add(AccidentType.of(2, "Машина и человек"));
+        types.add(AccidentType.of(3, "Машина и велосипед"));
+        model.addAttribute("types", types);
         return "addForm";
     }
 
