@@ -21,4 +21,12 @@ public class AccidentMemStore {
         accident.setId(ids.get());
         accidents.put(ids.getAndIncrement(), accident);
     }
+
+    public Accident findById(int id) {
+        return accidents.get(id);
+    }
+
+    public void update(Accident accident) {
+        accidents.replace(accident.getId(), accident);
+    }
 }

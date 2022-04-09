@@ -7,7 +7,6 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
             integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
             crossorigin="anonymous"></script>
@@ -30,36 +29,30 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="#">Главная <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" th:href="@{/index}">Главная</a>
                 <a class="nav-item nav-link" th:href="@{/addForm}">Добавить инцидент</a>
             </div>
         </div>
     </nav>
-    <div class="row">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Text</th>
-                <th scope="col">Address</th>
-                <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="accident: ${accidents}">
-                <td th:text="${accident.id}"></td>
-                <td th:text="${accident.name}"></td>
-                <td th:text="${accident.text}"></td>
-                <td th:text="${accident.address}"></td>
-                <td>
-                <a th:href="@{|/editForm?id=${accident.id}|}">
-                    <i class="fa fa-edit"></i>
-                </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="row pt-3">
+        <div class="card" style="width: 100%">
+            <div class="card-header">
+                Изменить инцидент
+            </div>
+            <div class="card-body">
+                <form th:action="@{/updateAccident}" method="POST" th:object="${accident}">
+                    <div class="form-group">
+                        <input type="hidden" name="id" th:field="*{id}"/>
+                        <label for="name">Имя</label>
+                        <input type="text" class="form-control" name="name" id="name" th:field="*{name}">
+                        <label for="text">Описание</label>
+                        <input type="text" class="form-control" name="text" id="text" th:field="*{text}">
+                        <label for="address">Адрес</label>
+                        <input type="text" class="form-control" name="address" id="address" th:field="*{address}">
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+            </div>
+        </div>
     </div>
 </div>
 </body>
