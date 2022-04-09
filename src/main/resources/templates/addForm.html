@@ -56,6 +56,12 @@
                             <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.name}"></option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="rIds">Статьи:</label>
+                        <select class="form-control" id="rIds" name="rIds" multiple="multiple">
+                            <option th:each="rule : ${rules}" th:value="${rule.id}" th:text="${rule.name}" th:selected="${rule.id==1}"></option>
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary mt-3">Отправить</button>
                 </form>
             </div>
