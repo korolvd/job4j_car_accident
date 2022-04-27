@@ -11,21 +11,23 @@ import ru.job4j.accident.model.AccidentType;
 import ru.job4j.accident.model.Rule;
 import ru.job4j.accident.service.AccidentService;
 import ru.job4j.accident.service.AccidentTypeService;
+import ru.job4j.accident.service.RuleService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Controller
 public class IndexController {
 
     private final AccidentService accidentService;
     private final AccidentTypeService typeService;
+    private final RuleService ruleService;
 
-    public IndexController(AccidentService service, AccidentTypeService typeService) {
+    public IndexController(AccidentService service, AccidentTypeService typeService, RuleService ruleService) {
         this.accidentService = service;
         this.typeService = typeService;
+        this.ruleService = ruleService;
     }
 
     @GetMapping("/index")
@@ -38,10 +40,7 @@ public class IndexController {
     public String addAccident(Model model) {
         Collection<AccidentType> types = typeService.findAll();
         model.addAttribute("types", types);
-        List<Rule> rules = new ArrayList<>();
-        rules.add(Rule.of(1, "Статья. 1"));
-        rules.add(Rule.of(2, "Статья. 2"));
-        rules.add(Rule.of(3, "Статья. 3"));
+        Collection<Rule> rules = ruleService.findAll();
         model.addAttribute("rules", rules);
         return "addForm";
     }
