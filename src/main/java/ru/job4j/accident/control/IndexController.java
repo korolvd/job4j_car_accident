@@ -53,7 +53,10 @@ public class IndexController {
         for (String id : ruleIds) {
             rules.add(ruleService.findById(Integer.parseInt(id)));
         }
-
+        accident.setRules(rules);
+        int typeId = Integer.parseInt(req.getParameter("tId"));
+        accident.setType(typeService.findById(typeId));
+        accidentService.add(accident);
         return "redirect:/index";
     }
 
