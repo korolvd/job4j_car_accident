@@ -4,6 +4,14 @@ public class AccidentType {
     private int id;
     private String name;
 
+    public AccidentType() {
+    }
+
+    public AccidentType(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public static AccidentType of(int id, String name) {
         AccidentType type = new AccidentType();
         type.id = id;

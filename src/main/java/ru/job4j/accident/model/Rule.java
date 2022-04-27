@@ -4,6 +4,14 @@ public class Rule {
     private int id;
     private String name;
 
+    public Rule() {
+    }
+
+    public Rule(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public static Rule of(int id, String name) {
         Rule rule = new Rule();
         rule.id = id;

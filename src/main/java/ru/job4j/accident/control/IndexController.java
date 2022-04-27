@@ -14,8 +14,9 @@ import ru.job4j.accident.service.AccidentTypeService;
 import ru.job4j.accident.service.RuleService;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 public class IndexController {
@@ -47,8 +48,15 @@ public class IndexController {
 
     @PostMapping("/addAccident")
     public String save(@ModelAttribute Accident accident, HttpServletRequest req) {
+        String[] ruleIds = req.getParameterValues("rIds");
+        Set<Rule> rules = new HashSet<>();
+        for (String id : ruleIds) {
+            rules.add(ruleService.findById(Integer.parseInt(id)));
+        }
+        accident.setRules(rules);
+        int typeId = Integer.parseInt(req.getParameter("tId"));
+        accident.setType(typeService.findById(typeId));
         accidentService.add(accident);
-        String[] ids = req.getParameterValues("rIds");
         return "redirect:/index";
     }
 
