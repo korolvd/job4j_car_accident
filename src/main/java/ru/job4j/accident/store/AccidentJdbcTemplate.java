@@ -1,10 +1,17 @@
 package ru.job4j.accident.store;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import ru.job4j.accident.model.Accident;
+import ru.job4j.accident.model.AccidentType;
+import ru.job4j.accident.model.Rule;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class AccidentJdbcTemplate {
@@ -15,39 +22,63 @@ public class AccidentJdbcTemplate {
     }
 
     public void add(Accident accident) {
-        jdbc.update("insert into accident (name, text, address) values (?, ?, ?)",
-                accident.getName(), accident.getText(), accident.getAddress());
+        int id = jdbc.update(
+                "insert into accident (name, text, address, type_id) values (?, ?, ?, ?) returning id",
+                accident.getName(), accident.getText(), accident.getAddress(), accident.getType().getId());
+        for (Rule rule : accident.getRules()) {
+            jdbc.update("insert into accident_rule(accident_id, rule_id) values (?, ?)",
+                    id, rule.getId());
+        }
     }
 
     public List<Accident> findAll() {
-        return jdbc.query("select id, name, text, address from accident",
-                (rs, row) -> {
-                    Accident accident = new Accident();
-                    accident.setId(rs.getInt("id"));
-                    accident.setName(rs.getString("name"));
-                    accident.setText(rs.getString("text"));
-                    accident.setAddress(rs.getString("address"));
-                    return accident;
-                });
+        return jdbc.query("select "
+                        + "a.id as id, a.name as name, text, address, t.id as t_id, t.name as t_name "
+                        + "from accident a join accident_type t on a.type_id = t.id",
+                new AccidentMapper());
     }
 
     public Accident findById(int id) {
         return jdbc.queryForObject(
-                "select * from accident where id = ?",
-                new Object[]{id},
-                (rs, rowNum) ->
-                        new Accident(
-                                rs.getInt("id"),
-                                rs.getString("name"),
-                                rs.getString("text"),
-                                rs.getString("address")
-                        )
+                "select * from accident a "
+                        + "join accident_type t on a.type_id = t.id where a.id = ?",
+                new Object[]{id}, new AccidentMapper()
         );
     }
 
     public void update(Accident accident) {
-        jdbc.update("update accident set name = ?, text = ?, address = ? where id = ?",
-                accident.getName(), accident.getText(), accident.getAddress(), accident.getId());
+        jdbc.update(
+                "update accident set name = ?, text = ?, address = ?, type_id = ? where id = ?",
+                accident.getName(),
+                accident.getText(),
+                accident.getAddress(),
+                accident.getType().getId(),
+                accident.getId());
+    }
 
+    private class AccidentMapper implements RowMapper<Accident> {
+
+        @Override
+        public Accident mapRow(ResultSet rs, int i) throws SQLException {
+            Accident accident = new Accident(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("text"),
+                    rs.getString("address"),
+                    new AccidentType(
+                            rs.getInt("t_id"),
+                            rs.getString("t_name"))
+            );
+            accident.setRules(Set.copyOf(
+                    jdbc.query(
+                            "select r.id as id, r.name as name from accident_rule ar "
+                                    + "join rule r on r.id = ar.rule_id "
+                                    + "where ar.accident_id = ?",
+                            new Object[]{accident.getId()},
+                            new BeanPropertyRowMapper(Rule.class)
+                    ))
+            );
+            return accident;
+        }
     }
 }

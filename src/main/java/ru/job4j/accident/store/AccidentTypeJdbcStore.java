@@ -1,5 +1,6 @@
 package ru.job4j.accident.store;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.job4j.accident.model.AccidentType;
@@ -17,23 +18,14 @@ public class AccidentTypeJdbcStore {
 
     public List<AccidentType> findAll() {
         return jdbc.query("select id, name from accident_type",
-                (rs, row) -> {
-                    AccidentType type = new AccidentType();
-                    type.setId(rs.getInt("id"));
-                    type.setName(rs.getString("name"));
-                    return type;
-                });
+                new BeanPropertyRowMapper<>(AccidentType.class));
     }
 
     public AccidentType getById(int id) {
         return jdbc.queryForObject(
                 "select * from accident_type where id = ?",
                 new Object[]{id},
-                (rs, rowNum) ->
-                        new AccidentType(
-                                rs.getInt("id"),
-                                rs.getString("name")
-                        )
+                new BeanPropertyRowMapper<>(AccidentType.class)
         );
     }
 }
