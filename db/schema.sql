@@ -31,5 +31,5 @@ CREATE TABLE IF NOT EXISTS accident
 CREATE TABLE IF NOT EXISTS accident_rule (
     id SERIAL PRIMARY KEY,
     accident_id INT REFERENCES accident(id),
-    rule_id INT REFERENCES rule(id)
+    rules_id INT REFERENCES rule(id)
 );
