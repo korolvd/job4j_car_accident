@@ -22,13 +22,10 @@ public class AccidentJdbcTemplate {
     }
 
     public void add(Accident accident) {
-        int id = jdbc.update(
+        accident.setId(jdbc.update(
                 "insert into accident (name, text, address, type_id) values (?, ?, ?, ?) returning id",
-                accident.getName(), accident.getText(), accident.getAddress(), accident.getType().getId());
-        for (Rule rule : accident.getRules()) {
-            jdbc.update("insert into accident_rule(accident_id, rule_id) values (?, ?)",
-                    id, rule.getId());
-        }
+                accident.getName(), accident.getText(), accident.getAddress(), accident.getType().getId()));
+        updateAccidentRuleTable(accident);
     }
 
     public List<Accident> findAll() {
@@ -54,6 +51,15 @@ public class AccidentJdbcTemplate {
                 accident.getAddress(),
                 accident.getType().getId(),
                 accident.getId());
+        jdbc.update("delete from accident_rule where accident_id = ?", accident.getId());
+        updateAccidentRuleTable(accident);
+    }
+
+    private void updateAccidentRuleTable(Accident accident) {
+        for (Rule rule : accident.getRules()) {
+            jdbc.update("insert into accident_rule(accident_id, rule_id) values (?, ?)",
+                    accident.getId(), rule.getId());
+        }
     }
 
     private class AccidentMapper implements RowMapper<Accident> {
