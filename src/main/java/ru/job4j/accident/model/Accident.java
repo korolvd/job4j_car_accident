@@ -17,7 +17,10 @@ public class Accident {
     @JoinColumn(name = "type_id")
     private AccidentType type;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany
+    @JoinTable(name = "accident_rule",
+            joinColumns = {@JoinColumn(name = "accident_id", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "rule_id", nullable = false, updatable = false)})
     private Set<Rule> rules;
 
     public Accident() {

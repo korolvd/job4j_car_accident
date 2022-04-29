@@ -1,6 +1,9 @@
 package ru.job4j.accident.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "rule")
@@ -11,11 +14,6 @@ public class Rule {
     private String name;
 
     public Rule() {
-    }
-
-    public Rule(int id, String name) {
-        this.id = id;
-        this.name = name;
     }
 
     public static Rule of(int id, String name) {

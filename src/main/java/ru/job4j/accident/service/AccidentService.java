@@ -1,18 +1,22 @@
 package ru.job4j.accident.service;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.job4j.accident.model.Accident;
-import ru.job4j.accident.store.AccidentHbmStore;
-import ru.job4j.accident.store.AccidentJdbcTemplate;
-import ru.job4j.accident.store.AccidentMemStore;
+import ru.job4j.accident.model.Rule;
+import ru.job4j.accident.store.*;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class AccidentService {
-    private final AccidentHbmStore store;
+    private static final Logger LOGGER = Logger.getLogger(AccidentService.class);
+    private final AccidentRepository store;
 
-    public AccidentService(AccidentHbmStore store) {
+    public AccidentService(AccidentRepository store, RuleRepository ruleStore) {
         this.store = store;
     }
 
@@ -21,7 +25,7 @@ public class AccidentService {
     }
 
     public void add(Accident accident) {
-        store.add(accident);
+        store.save(accident);
     }
 
     public Accident findById(int id) {
@@ -29,6 +33,6 @@ public class AccidentService {
     }
 
     public void update(Accident accident) {
-        store.update(accident);
+        store.save(accident);
     }
 }
