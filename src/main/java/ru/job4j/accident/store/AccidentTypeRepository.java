@@ -7,7 +7,7 @@ import ru.job4j.accident.model.AccidentType;
 import java.util.List;
 
 @Repository
-public interface AccidentTypeRepository extends CrudRepository {
+public interface AccidentTypeRepository extends CrudRepository<AccidentType, Integer> {
 
     @Override
     List<AccidentType> findAll();
