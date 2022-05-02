@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -36,15 +36,11 @@
         <div class="col">
             <div class="card">
                 <div class="card-header">
-                    Вход в учетную запись
+                    Регистрация
                 </div>
                 <div class="card-body">
-                    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-                        <span th:text="${errorMessage}"/>
-                    </div>
-                    <form th:action="@{/login}" method="POST">
+                    <form th:action="@{/registration}" method="POST">
                         <div class="form-group">
-                            <input type="hidden" name="id" value="0"/>
                             <label for="username">Логин</label>
                             <input type="text" class="form-control" id="username" name="username" >
                             <label for="password">Пароль</label>
@@ -52,7 +48,6 @@
                         </div>
                         <button type="submit" class="btn btn-primary mt-3">Отправить</button>
                     </form>
-                    <a class="nav-item nav-link" th:href="@{/registration}">Регистрация</a>
                 </div>
             </div>
         </div>
